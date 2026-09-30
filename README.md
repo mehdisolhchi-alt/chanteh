@@ -1,20 +1,33 @@
-# سایت چنته (لوله بازکن چنته پارس)
+# سایت چنته: فروش عمده و نمایندگی (B2B)
 
-لندینگ‌پیج استاتیک (HTML/CSS/JS خالص، بدون نیاز به build) برای هاست cPanel.
+لندینگ‌پیج B2B برای جذب بنکداران، عمده‌فروشان، هایپرمارکت‌ها، ابزارفروشی‌ها و شرکت‌های پخش.
+HTML/CSS/JS خالص + یک فایل PHP برای فرم. روی هر هاست cPanel اجرا می‌شود.
 
 ## ساختار
 ```
 site/
-├── index.html          صفحه اصلی (SEO + Schema.org + FAQ)
-├── .htaccess           فشرده‌سازی، کش، هدرهای امنیتی
+├── index.html      صفحه اصلی B2B
+├── send.php        دریافت فرم: اعتبارسنجی، ضداسپم، ذخیره در CSV، ایمیل اختیاری
+├── data/           محل ذخیره درخواست‌ها (leads.csv). با .htaccess از دسترس وب بسته است
+├── .htaccess       کش، فشرده‌سازی، هدرهای امنیتی
 ├── robots.txt / sitemap.xml
-└── assets/
-    ├── fonts/          فونت وزیرمتن (لوکال، بدون وابستگی به CDN خارجی)
-    └── img/            عکس‌های بهینه‌شده (webp + jpg) و favicon
+├── concepts/       ایده‌های طراحی قبلی (noindex؛ برای آپلود لازم نیست)
+└── assets/         فونت وزیرمتن، تصویر hero (SVG)، og-image
 ```
 
+## تنظیماتی که باید پر شوند
+| کجا | چه چیزی |
+|---|---|
+| `index.html` → `CONFIG.whatsapp` | شماره واتس‌اپ فروش، مثل `989121234567`. تا خالی است، دکمه واتس‌اپ نمایش داده نمی‌شود |
+| `index.html` → `CONFIG.catalogUrl` | مسیر PDF لیست قیمت، مثل `assets/chanteh-catalog.pdf`. بعد از ثبت فرم، لینک دانلود نمایش داده می‌شود |
+| `index.html` → جدول مشخصات | وزن بسته، تعداد در کارتن، تعداد در پالت، ابعاد |
+| `send.php` → `NOTIFY_EMAIL` | ایمیلی که درخواست‌های جدید به آن ارسال شود (اختیاری) |
+| `assets/img/hero-b2b.svg` | می‌توانید با تصویر سه‌بعدی ساخته‌شده با هوش مصنوعی جایگزین کنید |
+
+## دیدن درخواست‌ها
+در cPanel → File Manager → `public_html/data/leads.csv` را دانلود کنید. در اکسل با حروف فارسی درست باز می‌شود.
+
 ## آپلود روی cPanel
-1. محتوای پوشه `site/` را zip کنید (فایل مخفی `.htaccess` هم باید داخلش باشد).
-2. در cPanel → File Manager → `public_html` → Upload → سپس Extract.
-3. اگر دامنه `chanteh.ir` نیست، آدرس را در `index.html`، `robots.txt` و `sitemap.xml` عوض کنید.
-4. بعد از فعال شدن SSL (AutoSSL)، خطوط Force HTTPS در `.htaccess` را از کامنت دربیاورید.
+1. محتوای `site/` را (بدون پوشه `concepts`) zip کنید و در `public_html` آپلود و Extract کنید.
+2. اگر دامنه `chanteh.ir` نیست، در `index.html`، `robots.txt` و `sitemap.xml` عوض کنید.
+3. بعد از فعال شدن SSL، خطوط Force HTTPS در `.htaccess` را از کامنت دربیاورید.
