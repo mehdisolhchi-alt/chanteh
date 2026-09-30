@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /data/
 
-Sitemap: https://chanteh.ir/sitemap.xml
+Sitemap: https://www.chanteh.com/sitemap.xml
