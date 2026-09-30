@@ -1,7 +1,7 @@
 <?php
 /**
- * Chanteh B2B lead form handler.
- * Saves each request to data/leads.csv and (optionally) emails the sales team.
+ * Chanteh contact form handler (consumers and business customers).
+ * Saves each message to data/leads.csv and (optionally) emails the sales team.
  */
 
 // ---- Settings ----
@@ -12,15 +12,11 @@ const DATA_DIR = __DIR__ . '/data'; // protected by data/.htaccess
 date_default_timezone_set('Asia/Tehran');
 
 const BUSINESS = [
+    'consumer'    => 'مصرف‌کننده',
+    'retailer'    => 'مغازه‌دار / سوپرمارکت / ابزارفروشی',
     'wholesaler'  => 'بنکدار / عمده‌فروش',
     'distributor' => 'شرکت پخش مویرگی',
     'chain'       => 'هایپرمارکت / فروشگاه زنجیره‌ای',
-    'retailer'    => 'مغازه‌دار / ابزارفروشی',
-];
-const INTENTS = [
-    'catalog' => 'لیست قیمت و کاتالوگ',
-    'sample'  => 'نمونه رایگان',
-    'agency'  => 'نمایندگی',
 ];
 
 $wantsJson = stripos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false;
@@ -42,7 +38,7 @@ function field(string $key, int $max): string
 {
     $v = $_POST[$key] ?? '';
     if (!is_string($v)) return '';
-    $v = trim(preg_replace('/\s+/u', ' ', $v));
+    $v = trim(preg_replace('/\s+/u', ' ', $v)); // also flattens newlines in the message
     return mb_substr($v, 0, $max);
 }
 
@@ -78,14 +74,13 @@ $name     = field('name', 60);
 $business = field('business', 20);
 $city     = field('city', 40);
 $mobile   = normalize_mobile(field('mobile', 20));
-$intent   = field('intent', 20);
+$message  = field('message', 500);
 
 if (mb_strlen($name) < 2 || mb_strlen($city) < 2
     || !isset(BUSINESS[$business])
     || !preg_match('/^09\d{9}$/', $mobile)) {
     respond(false, 'invalid');
 }
-if (!isset(INTENTS[$intent])) $intent = 'catalog';
 
 if (!is_dir(DATA_DIR) && !mkdir(DATA_DIR, 0750, true)) respond(false, 'storage');
 
@@ -122,9 +117,9 @@ if (!$out) respond(false, 'storage');
 flock($out, LOCK_EX);
 if ($isNew) {
     fwrite($out, "\xEF\xBB\xBF"); // UTF-8 BOM so Excel shows Persian correctly
-    fputcsv($out, ['تاریخ', 'نوع درخواست', 'نام', 'حوزه کاری', 'شهر', 'موبایل'], ',', '"', '');
+    fputcsv($out, ['تاریخ', 'نام', 'نوع مخاطب', 'شهر', 'موبایل', 'پیام'], ',', '"', '');
 }
-$row = [date('Y-m-d H:i'), INTENTS[$intent], $name, BUSINESS[$business], $city, $mobile];
+$row = [date('Y-m-d H:i'), $name, BUSINESS[$business], $city, $mobile, $message];
 fputcsv($out, array_map('csv_safe', $row), ',', '"', '');
 flock($out, LOCK_UN);
 fclose($out);
@@ -132,12 +127,12 @@ fclose($out);
 // Optional email notification (no user input goes into headers)
 if (NOTIFY_EMAIL !== '') {
     $host = preg_replace('/[^a-z0-9.\-]/i', '', $_SERVER['SERVER_NAME'] ?? 'localhost');
-    $subject = '=?UTF-8?B?' . base64_encode('درخواست جدید همکاری: ' . INTENTS[$intent]) . '?=';
-    $body = "نوع درخواست: " . INTENTS[$intent] . "\n"
-          . "نام: $name\n"
-          . "حوزه کاری: " . BUSINESS[$business] . "\n"
+    $subject = '=?UTF-8?B?' . base64_encode('پیام جدید از سایت چنته: ' . BUSINESS[$business]) . '?=';
+    $body = "نام: $name\n"
+          . "نوع مخاطب: " . BUSINESS[$business] . "\n"
           . "شهر: $city\n"
-          . "موبایل: $mobile\n";
+          . "موبایل: $mobile\n"
+          . "پیام: " . ($message !== '' ? $message : '-') . "\n";
     $headers = "From: Chanteh Website <noreply@$host>\r\n"
              . "MIME-Version: 1.0\r\n"
              . "Content-Type: text/plain; charset=UTF-8\r\n";
