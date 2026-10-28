@@ -10,8 +10,22 @@ const MAX_PER_HOUR = 5;             // submissions allowed per IP per hour
 const DATA_DIR = __DIR__ . '/data'; // protected by data/.htaccess
 
 // Telegram settings live in data/config.php (not in git) — see data/config.sample.php
-$config = is_file(DATA_DIR . '/config.php') ? (include DATA_DIR . '/config.php') : [];
-if (!is_array($config)) $config = [];
+// Output is buffered so a malformed config.php can never leak its contents to visitors
+$config = [];
+$configError = '';
+if (is_file(DATA_DIR . '/config.php')) {
+    ob_start();
+    try {
+        $config = include DATA_DIR . '/config.php';
+    } catch (Throwable $e) {
+        $configError = 'syntax error line ' . $e->getLine();
+    }
+    if (ob_get_clean() !== '' && !$configError) $configError = 'file must start with <?php return [';
+    if (!is_array($config)) {
+        $config = [];
+        if (!$configError) $configError = 'file must return [ ... ];';
+    }
+}
 
 // Hosts without mbstring: fall back to iconv (always present in cPanel PHP builds)
 if (!function_exists('mb_substr')) {
@@ -42,6 +56,7 @@ if (isset($_GET['check'])) {
         'curl'            => function_exists('curl_init'),
         'config_php'      => is_file(DATA_DIR . '/config.php'),
         'telegram_mode'   => $mode,
+        'config_error'    => $configError,
     ], JSON_PRETTY_PRINT);
     exit;
 }
