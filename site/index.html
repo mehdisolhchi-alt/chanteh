@@ -716,6 +716,22 @@
         .then(function () { submit.disabled = false; });
     });
 
+    // On desktops tel: links do nothing — show and copy the number instead
+    if (!window.matchMedia('(pointer: coarse)').matches) {
+      document.querySelectorAll('a[href^="tel:"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          e.preventDefault();
+          var num = a.getAttribute('href').slice(4);
+          var fa = num.replace(/\d/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'[d]; });
+          if (navigator.clipboard) navigator.clipboard.writeText(num).catch(function () {});
+          if (!a.dataset.label) a.dataset.label = a.innerHTML;
+          a.textContent = 'شماره: ' + fa + ' (کپی شد)';
+          clearTimeout(a._t);
+          a._t = setTimeout(function () { a.innerHTML = a.dataset.label; }, 4000);
+        });
+      });
+    }
+
     // Hide the floating call button while the contact section is on screen
     var floatBox = document.querySelector('.float-call');
     if ('IntersectionObserver' in window) {

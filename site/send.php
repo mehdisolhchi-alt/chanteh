@@ -9,6 +9,10 @@ const NOTIFY_EMAIL = '';            // e.g. 'sales@chanteh.ir' — empty = no em
 const MAX_PER_HOUR = 5;             // submissions allowed per IP per hour
 const DATA_DIR = __DIR__ . '/data'; // protected by data/.htaccess
 
+// Telegram settings live in data/config.php (not in git) — see data/config.sample.php
+$config = is_file(DATA_DIR . '/config.php') ? (include DATA_DIR . '/config.php') : [];
+if (!is_array($config)) $config = [];
+
 date_default_timezone_set('Asia/Tehran');
 
 const BUSINESS = [
@@ -137,6 +141,34 @@ if (NOTIFY_EMAIL !== '') {
              . "MIME-Version: 1.0\r\n"
              . "Content-Type: text/plain; charset=UTF-8\r\n";
     @mail(NOTIFY_EMAIL, $subject, $body, $headers);
+}
+
+// Telegram notification (also works with Bale: set api_base to https://tapi.bale.ai)
+if (!empty($config['telegram_token']) && !empty($config['telegram_chat_id']) && function_exists('curl_init')) {
+    $text = "📩 پیام جدید از سایت چنته\n\n"
+          . "👤 نام: $name\n"
+          . "🏷 نوع مخاطب: " . BUSINESS[$business] . "\n"
+          . "📍 شهر: $city\n"
+          . "📞 موبایل: $mobile\n"
+          . "💬 پیام: " . ($message !== '' ? $message : '-') . "\n"
+          . "🕒 " . date('Y-m-d H:i');
+    $apiBase = rtrim($config['api_base'] ?? 'https://api.telegram.org', '/');
+    $ch = curl_init($apiBase . '/bot' . $config['telegram_token'] . '/sendMessage');
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => ['chat_id' => $config['telegram_chat_id'], 'text' => $text],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => 5,
+        CURLOPT_TIMEOUT        => 8,
+    ]);
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($resp === false || $code !== 200) {
+        // The lead is already saved; just log why the notification failed
+        $err = $resp === false ? curl_error($ch) : "HTTP $code $resp";
+        @file_put_contents(DATA_DIR . '/notify-errors.log', date('Y-m-d H:i') . " $err\n", FILE_APPEND);
+    }
+    curl_close($ch);
 }
 
 respond(true);
