@@ -143,20 +143,40 @@ if (NOTIFY_EMAIL !== '') {
     @mail(NOTIFY_EMAIL, $subject, $body, $headers);
 }
 
-// Telegram notification (also works with Bale: set api_base to https://tapi.bale.ai)
-if (!empty($config['telegram_token']) && !empty($config['telegram_chat_id']) && function_exists('curl_init')) {
-    $text = "📩 پیام جدید از سایت چنته\n\n"
-          . "👤 نام: $name\n"
-          . "🏷 نوع مخاطب: " . BUSINESS[$business] . "\n"
-          . "📍 شهر: $city\n"
-          . "📞 موبایل: $mobile\n"
-          . "💬 پیام: " . ($message !== '' ? $message : '-') . "\n"
-          . "🕒 " . date('Y-m-d H:i');
+// Telegram notification, two modes (see data/config.sample.php):
+//  - relay: our Cloudflare Worker holds the bot token and chat id (relay_url + relay_key)
+//  - direct: call the Bot API ourselves (telegram_token + telegram_chat_id [+ api_base])
+$h = fn(string $v): string => htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); // relay uses parse_mode HTML
+$text = "📩 <b>پیام جدید از سایت چنته</b>\n\n"
+      . "👤 نام: " . $h($name) . "\n"
+      . "🏷 نوع مخاطب: " . BUSINESS[$business] . "\n"
+      . "📍 شهر: " . $h($city) . "\n"
+      . "📞 موبایل: $mobile\n"
+      . "💬 پیام: " . ($message !== '' ? $h($message) : '-') . "\n"
+      . "🕒 " . date('Y-m-d H:i');
+
+$req = null;
+if (!empty($config['relay_url']) && !empty($config['relay_key'])) {
+    $req = [
+        'url'     => $config['relay_url'],
+        'headers' => ['Content-Type: application/json', 'x-relay-key: ' . $config['relay_key']],
+        'body'    => json_encode(['text' => $text], JSON_UNESCAPED_UNICODE),
+    ];
+} elseif (!empty($config['telegram_token']) && !empty($config['telegram_chat_id'])) {
     $apiBase = rtrim($config['api_base'] ?? 'https://api.telegram.org', '/');
-    $ch = curl_init($apiBase . '/bot' . $config['telegram_token'] . '/sendMessage');
+    $req = [
+        'url'     => $apiBase . '/bot' . $config['telegram_token'] . '/sendMessage',
+        'headers' => [],
+        'body'    => ['chat_id' => $config['telegram_chat_id'], 'text' => $text, 'parse_mode' => 'HTML'],
+    ];
+}
+
+if ($req && function_exists('curl_init')) {
+    $ch = curl_init($req['url']);
     curl_setopt_array($ch, [
         CURLOPT_POST           => true,
-        CURLOPT_POSTFIELDS     => ['chat_id' => $config['telegram_chat_id'], 'text' => $text],
+        CURLOPT_HTTPHEADER     => $req['headers'],
+        CURLOPT_POSTFIELDS     => $req['body'],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_CONNECTTIMEOUT => 5,
         CURLOPT_TIMEOUT        => 8,
