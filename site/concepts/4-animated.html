@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>چنته | ایده ۴: انیمیشنی</title>
+<style>
+  @font-face { font-family: "Vazirmatn"; src: url("../assets/fonts/Vazirmatn-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  :root {
+    --bg: #070B14; --bg2: #0D1424; --card: rgba(255,255,255,.04); --line: rgba(255,255,255,.09);
+    --txt: #EEF2F8; --muted: #93A0B5; --fire: #FF5A2E; --amber: #FFA928; --water: #2FB8FF; --water2: #7BE0FF; --clog: #6B5646;
+    --cycle: 8s;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Vazirmatn", Tahoma, sans-serif; background: var(--bg); color: var(--txt); line-height: 1.85; overflow-x: clip; }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding-inline: 1rem; }
+
+  /* scroll progress */
+  .progress { position: fixed; top: 0; right: 0; height: 3px; width: 100%; transform-origin: right; transform: scaleX(0); background: linear-gradient(270deg, var(--fire), var(--amber), var(--water)); z-index: 100; }
+
+  /* animated background blobs */
+  .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .5; animation: drift 18s ease-in-out infinite alternate; }
+  .blob.a { width: 520px; height: 520px; background: #FF5A2E; top: -180px; right: -120px; opacity: .28; }
+  .blob.b { width: 460px; height: 460px; background: #1E7BFF; bottom: -160px; left: -140px; opacity: .25; animation-delay: -6s; }
+  .blob.c { width: 300px; height: 300px; background: #2FB8FF; top: 40%; left: 40%; opacity: .12; animation-delay: -12s; }
+  @keyframes drift { to { transform: translate(60px, 80px) scale(1.15); } }
+  .grain { position: absolute; inset: 0; opacity: .05; background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 3px 3px; }
+
+  /* header */
+  header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); background: rgba(7,11,20,.55); border-bottom: 1px solid var(--line); }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 70px; }
+  .logo { font-weight: 900; font-size: 1.6rem; background: linear-gradient(90deg, var(--fire), var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; text-decoration: none; }
+  .links { display: none; gap: 1.8rem; list-style: none; }
+  .links a { text-decoration: none; color: var(--muted); transition: color .2s; }
+  .links a:hover { color: var(--txt); }
+  .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .85rem 1.6rem; border-radius: 999px; font-weight: 800; text-decoration: none; font-family: inherit; border: 0; cursor: pointer; transition: transform .25s, box-shadow .25s; will-change: transform; }
+  .btn-fire { background: linear-gradient(135deg, var(--fire), #FF7A3D); color: #fff; box-shadow: 0 10px 30px -8px rgba(255,90,46,.7); }
+  .btn-fire:hover { box-shadow: 0 14px 40px -6px rgba(255,90,46,.9); }
+  .btn-glass { background: var(--card); color: var(--txt); border: 1px solid var(--line); }
+  .nav .btn { padding: .55rem 1.1rem; font-size: .9rem; }
+
+  /* hero */
+  .hero { min-height: calc(100vh - 70px); display: grid; align-items: center; padding-block: 2.5rem 3rem; }
+  .hero-grid { display: grid; gap: 1.5rem; align-items: center; }
+  .chip { display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--line); background: var(--card); padding: .35rem .9rem; border-radius: 999px; font-size: .85rem; color: var(--muted); }
+  .chip i { width: 8px; height: 8px; border-radius: 50%; background: #3DDC84; box-shadow: 0 0 0 0 rgba(61,220,132,.7); animation: ping 2s infinite; }
+  @keyframes ping { 70% { box-shadow: 0 0 0 10px rgba(61,220,132,0); } 100% { box-shadow: 0 0 0 0 rgba(61,220,132,0); } }
+  h1 { font-size: clamp(2.4rem, 7.5vw, 5rem); font-weight: 900; line-height: 1.2; margin: 1.2rem 0; letter-spacing: -1px; }
+  h1 .line { display: block; overflow: hidden; padding-bottom: .1em; }
+  h1 .line > span { display: inline-block; transform: translateY(110%); animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
+  h1 .line:nth-child(2) > span { animation-delay: .15s; }
+  h1 .line:nth-child(3) > span { animation-delay: .3s; }
+  @keyframes rise { to { transform: none; } }
+  .grad { background: linear-gradient(90deg, var(--water), var(--water2), var(--water)); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rise .9s cubic-bezier(.2,.8,.2,1) .3s forwards, shine 4s linear 1.2s infinite; }
+  @keyframes shine { to { background-position: -200% 0; } }
+  .lead { color: var(--muted); font-size: 1.1rem; max-width: 32rem; opacity: 0; animation: fade .8s .6s forwards; }
+  .actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; opacity: 0; animation: fade .8s .8s forwards; }
+  @keyframes fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  /* pipe scene */
+  .scene { position: relative; opacity: 0; animation: fade 1s .4s forwards; }
+  .scene svg { width: 100%; max-width: 520px; margin: 0 auto; display: block; overflow: visible; }
+  .stage { display: flex; justify-content: center; gap: .5rem; margin-top: .5rem; }
+  .stage span { font-size: .85rem; font-weight: 700; padding: .3rem .9rem; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); animation: var(--cycle) infinite; }
+  .stage .s1 { animation-name: st1; } .stage .s2 { animation-name: st2; } .stage .s3 { animation-name: st3; }
+  @keyframes st1 { 0%,12% { background: #3a2b22; color: #FFB48F; border-color: #6B5646; } 16%,100% { background: transparent; color: var(--muted); border-color: var(--line); } }
+  @keyframes st2 { 0%,12% { background: transparent; color: var(--muted); } 16%,50% { background: var(--fire); color: #fff; border-color: var(--fire); } 54%,100% { background: transparent; color: var(--muted); border-color: var(--line); } }
+  @keyframes st3 { 0%,50% { background: transparent; color: var(--muted); } 54%,92% { background: var(--water); color: #04121d; border-color: var(--water); } 96%,100% { background: transparent; color: var(--muted); border-color: var(--line); } }
+
+  .granule { animation: fall var(--cycle) infinite; opacity: 0; }
+  @keyframes fall {
+    0%,14% { opacity: 0; transform: translateY(0); }
+    16% { opacity: 1; }
+    34% { opacity: 1; transform: translateY(205px); }
+    37%,100% { opacity: 0; transform: translateY(205px); }
+  }
+  .bubble { animation: bub var(--cycle) infinite; opacity: 0; transform-box: fill-box; }
+  @keyframes bub {
+    0%,34% { opacity: 0; transform: translateY(0) scale(.4); }
+    38% { opacity: .9; }
+    52% { opacity: 0; transform: translateY(-40px) scale(1.2); }
+    100% { opacity: 0; }
+  }
+  .clog { transform-box: fill-box; transform-origin: center; animation: clog var(--cycle) infinite; }
+  @keyframes clog {
+    0%,36% { transform: scale(1); opacity: 1; }
+    40% { transform: scale(1.06) rotate(4deg); }
+    52% { transform: scale(0) rotate(-20deg); opacity: 0; }
+    92% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .standing { stroke-dasharray: 150 400; animation: drain var(--cycle) infinite; }
+  @keyframes drain { 0%,50% { stroke-dashoffset: 0; } 60%,94% { stroke-dashoffset: 150; } 100% { stroke-dashoffset: 0; } }
+  .flow { stroke-dasharray: 18 14; animation: flowmove .6s linear infinite, flowshow var(--cycle) infinite; }
+  @keyframes flowmove { to { stroke-dashoffset: -32; } }
+  @keyframes flowshow { 0%,50% { opacity: 0; } 56%,88% { opacity: 1; } 94%,100% { opacity: 0; } }
+  .drip { animation: drip var(--cycle) infinite; opacity: 0; }
+  @keyframes drip { 0%,56% { opacity: 0; transform: translateY(0); } 60% { opacity: 1; } 70% { opacity: 0; transform: translateY(60px); } 71%,100% { opacity: 0; } }
+  .drip.d2 { animation-name: drip2; }
+  @keyframes drip2 { 0%,70% { opacity: 0; transform: translateY(0); } 74% { opacity: 1; } 84% { opacity: 0; transform: translateY(60px); } 85%,100% { opacity: 0; } }
+  .shine-ring { transform-box: fill-box; transform-origin: center; animation: ring var(--cycle) infinite; opacity: 0; }
+  @keyframes ring { 0%,50% { opacity: 0; transform: scale(.3); } 54% { opacity: .9; } 66%,100% { opacity: 0; transform: scale(2.2); } }
+
+  /* marquee */
+  .marquee { border-block: 1px solid var(--line); overflow: hidden; padding: 1.1rem 0; background: rgba(255,255,255,.02); }
+  .track { display: flex; width: max-content; gap: 2.5rem; animation: scroll 28s linear infinite; font-weight: 900; font-size: 1.5rem; color: var(--muted); }
+  .track b { color: var(--fire); }
+  @keyframes scroll { to { transform: translateX(50%); } }
+
+  /* sections */
+  section { padding-block: 5rem; }
+  .head { text-align: center; max-width: 40rem; margin: 0 auto 3rem; }
+  .kicker { color: var(--fire); font-weight: 800; font-size: .9rem; letter-spacing: 1px; }
+  h2 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 900; line-height: 1.3; margin-top: .4rem; }
+  .head p { color: var(--muted); margin-top: .6rem; }
+
+  .cards { display: grid; gap: 1rem; }
+  .card { position: relative; background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 1.8rem; overflow: hidden; transition: transform .3s, border-color .3s; }
+  .card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(255,90,46,.14), transparent 40%); opacity: 0; transition: opacity .3s; }
+  .card:hover::before { opacity: 1; }
+  .card:hover { border-color: rgba(255,90,46,.4); transform: translateY(-4px); }
+  .ic { width: 58px; height: 58px; border-radius: 18px; display: grid; place-items: center; background: linear-gradient(135deg, rgba(255,90,46,.2), rgba(255,169,40,.08)); border: 1px solid rgba(255,90,46,.25); margin-bottom: 1.1rem; }
+  .ic svg { width: 28px; height: 28px; stroke: var(--amber); }
+  .card:hover .ic svg { animation: wiggle .6s; }
+  @keyframes wiggle { 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+  .card h3 { font-weight: 800; font-size: 1.15rem; }
+  .card p { color: var(--muted); font-size: .95rem; margin-top: .3rem; }
+
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .stat { text-align: center; padding: 1.6rem 1rem; border-radius: 22px; background: var(--card); border: 1px solid var(--line); }
+  .stat b { display: block; font-size: clamp(2rem, 6vw, 3rem); font-weight: 900; background: linear-gradient(180deg, #fff, #9fb3cc); -webkit-background-clip: text; background-clip: text; color: transparent; line-height: 1.2; }
+  .stat span { color: var(--muted); font-size: .9rem; }
+
+  .cta { position: relative; overflow: hidden; border-radius: 32px; padding: 3rem 1.5rem; text-align: center; background: linear-gradient(135deg, #FF5A2E, #D93A1B); }
+  .cta::after { content: ""; position: absolute; inset: -50%; background: conic-gradient(from 0deg, transparent, rgba(255,255,255,.18), transparent 30%); animation: spin 8s linear infinite; }
+  @keyframes spin { to { transform: rotate(1turn); } }
+  .cta > * { position: relative; z-index: 1; }
+  .cta h2 { color: #fff; }
+  .cta p { color: #FFE1D6; margin: .6rem 0 1.6rem; }
+  .cta .phone { display: inline-block; direction: ltr; font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 900; color: #fff; text-decoration: none; }
+  .cta .btn { background: #fff; color: #C8321A; margin-top: 1rem; }
+
+  footer { text-align: center; color: var(--muted); padding: 2.5rem 1rem; border-top: 1px solid var(--line); font-size: .9rem; }
+
+  /* scroll reveal */
+  .rv { opacity: 0; transform: translateY(40px) scale(.98); transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: var(--d, 0s); }
+  .rv.in { opacity: 1; transform: none; }
+
+  @media (min-width: 700px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(4, 1fr); }
+  }
+  @media (min-width: 980px) {
+    .links { display: flex; }
+    .hero-grid { grid-template-columns: 1fr 1fr; }
+    .cards { grid-template-columns: repeat(4, 1fr); }
+    .cta { padding: 4.5rem 3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition: none !important; }
+    .rv { opacity: 1; transform: none; }
+    .granule, .bubble, .drip, .shine-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="bg" aria-hidden="true"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div><div class="grain"></div></div>
+
+<header>
+  <nav class="wrap nav" aria-label="منوی اصلی">
+    <a class="logo" href="#">چنته</a>
+    <ul class="links">
+      <li><a href="#uses">کاربردها</a></li>
+      <li><a href="#why">چرا چنته</a></li>
+      <li><a href="#contact">تماس</a></li>
+    </ul>
+    <a class="btn btn-fire magnetic" href="tel:+982133973948">تماس با فروش</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero wrap" aria-labelledby="t">
+    <div class="hero-grid">
+      <div>
+        <span class="chip"><i></i>تولید چنته پارس · ساخت ایران</span>
+        <h1 id="t">
+          <span class="line"><span>لوله بازکن چنته؛</span></span>
+          <span class="line"><span>گرفتگی می‌ره،</span></span>
+          <span class="line"><span class="grad">آب روان می‌شه.</span></span>
+        </h1>
+        <p class="lead">برای فاضلاب، روشویی، کف‌شوی حمام و سینک آشپزخانه. بدون لوله‌کش، بدون دردسر.</p>
+        <div class="actions">
+          <a class="btn btn-fire magnetic" href="#contact">سفارش عمده ←</a>
+          <a class="btn btn-glass" href="#uses">کجا استفاده کنم؟</a>
+        </div>
+      </div>
+
+      <div class="scene" aria-hidden="true">
+        <svg viewBox="0 0 420 330">
+          <defs>
+            <linearGradient id="pipeG" x1="0" x2="1">
+              <stop offset="0" stop-color="#26324A"/><stop offset=".5" stop-color="#3A4A68"/><stop offset="1" stop-color="#1E2839"/>
+            </linearGradient>
+            <linearGradient id="basinG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#E8EEF7"/><stop offset="1" stop-color="#AAB6C8"/>
+            </linearGradient>
+            <radialGradient id="clogG"><stop offset="0" stop-color="#8A705C"/><stop offset="1" stop-color="#4E3E32"/></radialGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+
+          <!-- pipe body -->
+          <path d="M200 70 V200 A60 60 0 0 0 320 200 V150 H410" fill="none" stroke="#0A1020" stroke-width="54" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M200 70 V200 A60 60 0 0 0 320 200 V150 H410" fill="none" stroke="url(#pipeG)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M200 70 V200 A60 60 0 0 0 320 200 V150 H410" fill="none" stroke="#0E1628" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- standing water above clog (drains) -->
+          <path class="standing" d="M200 222 V72" fill="none" stroke="#2FB8FF" stroke-width="28" opacity=".55"/>
+
+          <!-- flowing water after unclog -->
+          <path class="flow" d="M200 70 V200 A60 60 0 0 0 320 200 V150 H410" fill="none" stroke="#5CCBFF" stroke-width="22" stroke-linecap="butt" stroke-linejoin="round" filter="url(#glow)"/>
+
+          <!-- clog -->
+          <g class="clog">
+            <circle cx="236" cy="252" r="15" fill="url(#clogG)"/>
+            <circle cx="258" cy="258" r="17" fill="url(#clogG)"/>
+            <circle cx="281" cy="250" r="14" fill="url(#clogG)"/>
+            <circle cx="222" cy="236" r="11" fill="url(#clogG)"/>
+            <path d="M226 246 q10 -8 22 2 M250 262 q12 -10 26 -2" stroke="#2E241D" stroke-width="2" fill="none"/>
+          </g>
+
+          <!-- bubbles -->
+          <circle class="bubble" cx="238" cy="240" r="4" fill="none" stroke="#FFD4A8" stroke-width="1.5"/>
+          <circle class="bubble" cx="258" cy="246" r="5" fill="none" stroke="#FFD4A8" stroke-width="1.5" style="animation-delay:.25s"/>
+          <circle class="bubble" cx="276" cy="238" r="3.5" fill="none" stroke="#FFD4A8" stroke-width="1.5" style="animation-delay:.5s"/>
+          <circle class="bubble" cx="226" cy="228" r="3" fill="none" stroke="#FFD4A8" stroke-width="1.5" style="animation-delay:.7s"/>
+
+          <!-- success ring -->
+          <circle class="shine-ring" cx="258" cy="252" r="22" fill="none" stroke="#7BE0FF" stroke-width="3"/>
+
+          <!-- granules (Chanteh) -->
+          <g fill="#FF7A3D" filter="url(#glow)">
+            <circle class="granule" cx="194" cy="8" r="4"/>
+            <circle class="granule" cx="204" cy="0" r="3.5" style="animation-delay:.15s"/>
+            <circle class="granule" cx="198" cy="-10" r="4.5" style="animation-delay:.3s"/>
+            <circle class="granule" cx="207" cy="-16" r="3" style="animation-delay:.45s"/>
+            <circle class="granule" cx="192" cy="-22" r="3.5" style="animation-delay:.6s"/>
+            <circle class="granule" cx="202" cy="-30" r="4" style="animation-delay:.75s"/>
+          </g>
+
+          <!-- basin -->
+          <path d="M80 30 H320 Q316 78 240 84 H160 Q84 78 80 30 Z" fill="url(#basinG)"/>
+          <path d="M80 30 H320" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+          <ellipse cx="200" cy="72" rx="16" ry="5" fill="#5A6678"/>
+
+          <!-- outlet drips -->
+          <circle class="drip" cx="404" cy="170" r="5" fill="#5CCBFF"/>
+          <circle class="drip d2" cx="398" cy="170" r="4" fill="#5CCBFF"/>
+        </svg>
+        <div class="stage"><span class="s1">۱. گرفتگی</span><span class="s2">۲. چنته</span><span class="s3">۳. آزاد!</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="track">
+      <span>فاضلاب</span><b>✦</b><span>دستشویی</span><b>✦</b><span>حمام</span><b>✦</b><span>آشپزخانه</span><b>✦</b><span>ساخت ایران</span><b>✦</b>
+      <span>فاضلاب</span><b>✦</b><span>دستشویی</span><b>✦</b><span>حمام</span><b>✦</b><span>آشپزخانه</span><b>✦</b><span>ساخت ایران</span><b>✦</b>
+    </div>
+  </div>
+
+  <section id="uses" class="wrap" aria-labelledby="uses-t">
+    <div class="head rv">
+      <div class="kicker">کاربردها</div>
+      <h2 id="uses-t">یک محصول، چهار دردسر کمتر</h2>
+      <p>هر جای خانه که آب ایستاده، چنته راهش را باز می‌کند.</p>
+    </div>
+    <div class="cards">
+      <article class="card rv" style="--d:0s">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v4H4z"/><path d="M8 8v12M16 8v12M8 14h8"/></svg></div>
+        <h3>لوله فاضلاب</h3><p>مسیرهای اصلی و انشعابات ساختمان</p>
+      </article>
+      <article class="card rv" style="--d:.1s">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10h18a9 9 0 0 1-18 0z"/><path d="M12 19v3M12 3v4M10 5h4"/></svg></div>
+        <h3>روشویی</h3><p>وقتی آب دیر پایین می‌رود</p>
+      </article>
+      <article class="card rv" style="--d:.2s">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16v3a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M6 12V6a2 2 0 0 1 4 0"/></svg></div>
+        <h3>کف‌شوی حمام</h3><p>مو و رسوب صابون</p>
+      </article>
+      <article class="card rv" style="--d:.3s">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><path d="M15 12V5a2 2 0 0 1 4 0"/></svg></div>
+        <h3>سینک آشپزخانه</h3><p>چربی و مواد غذایی</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="why" class="wrap" aria-labelledby="why-t">
+    <div class="head rv">
+      <div class="kicker">چرا چنته</div>
+      <h2 id="why-t">برندی که خانه‌های ایرانی می‌شناسند</h2>
+    </div>
+    <div class="stats">
+      <div class="stat rv"><b data-count="4">۰</b><span>کاربرد در خانه</span></div>
+      <div class="stat rv" style="--d:.1s"><b>۱۰۰٪</b><span>ساخت ایران</span></div>
+      <div class="stat rv" style="--d:.2s"><b data-count="228508">۰</b><span>شماره ثبت</span></div>
+      <div class="stat rv" style="--d:.3s"><b>عمده</b><span>و خرده</span></div>
+    </div>
+  </section>
+
+  <section id="contact" class="wrap">
+    <div class="cta rv">
+      <h2>آماده‌ی سفارش هستید؟</h2>
+      <p>فروش عمده به فروشگاه‌ها و پخش‌کننده‌ها، از دفتر فروش ناصرخسرو تهران.</p>
+      <a class="phone" href="tel:+982133973948">۰۲۱-۳۳۹۷۳۹۴۸</a><br>
+      <a class="btn magnetic" href="tel:+982133976800">خط دوم: ۰۲۱-۳۳۹۷۶۸۰۰</a>
+    </div>
+  </section>
+</main>
+
+<footer>شرکت تولید شیمیایی چنته پارس · ساخت ایران</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fa = function (n) { return n.toLocaleString('fa-IR', { useGrouping: false }); };
+
+  // scroll reveal + counters
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      e.target.querySelectorAll('[data-count]').forEach(function (el) {
+        var end = +el.dataset.count, t0 = null;
+        if (reduce) { el.textContent = fa(end); return; }
+        function step(t) {
+          t0 = t0 || t;
+          var p = Math.min((t - t0) / 1400, 1), eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = fa(Math.round(end * eased));
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+      io.unobserve(e.target);
+    });
+  }, { threshold: .15 });
+  document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+
+  // scroll progress bar
+  var bar = document.getElementById('progress');
+  addEventListener('scroll', function () {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = 'scaleX(' + (h > 0 ? scrollY / h : 0) + ')';
+  }, { passive: true });
+
+  if (reduce || !matchMedia('(hover: hover)').matches) return;
+
+  // card spotlight follows cursor
+  document.querySelectorAll('.card').forEach(function (c) {
+    c.addEventListener('pointermove', function (ev) {
+      var r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+    });
+  });
+
+  // magnetic buttons
+  document.querySelectorAll('.magnetic').forEach(function (b) {
+    b.addEventListener('pointermove', function (ev) {
+      var r = b.getBoundingClientRect();
+      b.style.transform = 'translate(' + (ev.clientX - r.left - r.width / 2) * .25 + 'px,' + (ev.clientY - r.top - r.height / 2) * .35 + 'px)';
+    });
+    b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>چنته | ایده ۱: نوستالژیک</title>
+<style>
+  @font-face { font-family: "Vazirmatn"; src: url("../assets/fonts/Vazirmatn-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  :root { --red: #E23B24; --orange: #F07A2E; --paper: #FBF3E6; --ink: #2A1E17; --muted: #6B5A4E; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Vazirmatn", Tahoma, sans-serif; color: var(--ink); line-height: 1.9;
+    background-color: var(--paper);
+    /* lattice pattern inspired by the back of the old box */
+    background-image:
+      linear-gradient(45deg, transparent 48%, rgba(240,122,46,.13) 49%, rgba(240,122,46,.13) 51%, transparent 52%),
+      linear-gradient(-45deg, transparent 48%, rgba(240,122,46,.13) 49%, rgba(240,122,46,.13) 51%, transparent 52%),
+      linear-gradient(rgba(240,122,46,.13) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,122,46,.13) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+  header { border-bottom: 3px double var(--red); background: var(--paper); }
+  .nav { display: flex; justify-content: space-between; align-items: center; height: 72px; }
+  .logo { font-size: 2.2rem; font-weight: 900; color: var(--red); text-shadow: 3px 3px 0 #FFD2BF; }
+  .stamp { border: 2px solid var(--red); color: var(--red); padding: .2rem .9rem; border-radius: 6px; font-weight: 800; transform: rotate(-4deg); font-size: .9rem; }
+  .hero { padding-block: 3.5rem; text-align: center; }
+  .ribbon { display: inline-block; background: var(--red); color: #fff; padding: .3rem 1.4rem; font-weight: 800; clip-path: polygon(0 0,100% 0,95% 50%,100% 100%,0 100%,5% 50%); }
+  h1 { font-size: clamp(2.4rem, 8vw, 4.6rem); font-weight: 900; color: var(--red); line-height: 1.25; margin: 1rem 0 .5rem; text-shadow: 4px 4px 0 #FFD2BF; }
+  .sub { font-size: 1.25rem; font-weight: 700; }
+  .lead { color: var(--muted); max-width: 36rem; margin: 1rem auto 2rem; }
+  main { overflow-x: clip; }
+  .box { max-width: 640px; margin: 0 auto; background: #fff; padding: 14px; border: 3px solid var(--ink); box-shadow: 10px 10px 0 var(--red); transform: rotate(-1.5deg); }
+  .btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+  .btn { padding: .9rem 1.8rem; font-weight: 800; text-decoration: none; border: 3px solid var(--ink); font-family: inherit; }
+  .btn-r { background: var(--red); color: #fff; box-shadow: 5px 5px 0 var(--ink); }
+  .btn-w { background: #fff; color: var(--ink); box-shadow: 5px 5px 0 var(--orange); }
+  section { padding-block: 3.5rem; }
+  h2 { text-align: center; font-size: 2rem; font-weight: 900; margin-bottom: 2rem; }
+  h2::after { content: ""; display: block; width: 90px; height: 6px; margin: .6rem auto 0; background: repeating-linear-gradient(90deg, var(--red) 0 12px, var(--orange) 12px 24px); }
+  .grid { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .card { background: #fff; border: 3px solid var(--ink); padding: 1.5rem; text-align: center; box-shadow: 6px 6px 0 var(--orange); }
+  .card .emoji { font-size: 2.4rem; }
+  .card h3 { color: var(--red); font-weight: 900; margin: .4rem 0; }
+  .card p { color: var(--muted); font-size: .95rem; }
+  .quote { background: var(--red); color: #fff; text-align: center; padding: 3rem 1rem; }
+  .quote p { font-size: clamp(1.3rem, 4vw, 2rem); font-weight: 900; }
+  .quote a { color: #fff; font-size: 1.6rem; font-weight: 900; direction: ltr; display: inline-block; margin-top: .5rem; text-decoration: none; border-bottom: 3px dashed #fff; }
+  footer { text-align: center; padding: 2rem; color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><div class="logo">چنته</div><div class="stamp">اصل · ساخت ایران</div></div></header>
+<main>
+  <section class="hero wrap">
+    <span class="ribbon">همان لوله بازکنی که می‌شناسید</span>
+    <h1>لوله بازکن چنته</h1>
+    <p class="sub">فاضلاب · دستشویی · حمام · آشپزخانه</p>
+    <p class="lead">سال‌هاست جعبه‌ی قرمز چنته در خانه‌های ایرانی جا دارد. همان کیفیت آشنا، حالا با سفارش آسان‌تر.</p>
+    <div class="box"><img src="../assets/img/box-front.webp" alt="جعبه لوله بازکن چنته"></div>
+    <div class="btns"><a class="btn btn-r" href="#">سفارش عمده</a><a class="btn btn-w" href="#">نشانی فروشگاه</a></div>
+  </section>
+  <section class="wrap">
+    <h2>کجا به کارتان می‌آید؟</h2>
+    <div class="grid">
+      <div class="card"><div class="emoji">🚽</div><h3>فاضلاب</h3><p>مسیرهای اصلی و انشعابات</p></div>
+      <div class="card"><div class="emoji">🚰</div><h3>دستشویی</h3><p>روشویی که دیر خالی می‌شود</p></div>
+      <div class="card"><div class="emoji">🛁</div><h3>حمام</h3><p>گرفتگی مو و رسوب صابون</p></div>
+      <div class="card"><div class="emoji">🍽️</div><h3>آشپزخانه</h3><p>چربی و مواد غذایی سینک</p></div>
+    </div>
+  </section>
+  <section class="quote">
+    <p>بسته‌بندی چنته را جای دیگری دیدید؟ خبر بدهید، مژدگانی بگیرید!</p>
+    <a href="tel:+982133973948">۰۲۱-۳۳۹۷۳۹۴۸</a>
+  </section>
+</main>
+<footer>شرکت تولید شیمیایی چنته پارس · ساخت ایران</footer>
+</body>
+</html>

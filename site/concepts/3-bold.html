@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>چنته | ایده ۳: جسور و تیره</title>
+<style>
+  @font-face { font-family: "Vazirmatn"; src: url("../assets/fonts/Vazirmatn-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  :root { --fire: #FF5A2E; --amber: #FFB020; --bg: #0E0C0B; --card: #1A1614; --line: #2E2724; --txt: #F5EFEA; --muted: #A89C95; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Vazirmatn", Tahoma, sans-serif; background: var(--bg); color: var(--txt); line-height: 1.85; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1rem; }
+  .nav { display: flex; justify-content: space-between; align-items: center; height: 76px; }
+  .logo { font-weight: 900; font-size: 1.7rem; background: linear-gradient(90deg, var(--fire), var(--amber)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .ghost { color: var(--txt); border: 1px solid var(--line); padding: .5rem 1.1rem; border-radius: 999px; text-decoration: none; font-size: .9rem; }
+  .hero { position: relative; padding-block: 3rem 4rem; }
+  main { overflow-x: clip; }
+  .glow { position: absolute; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(circle, rgba(255,90,46,.45), transparent 65%); bottom: 0; left: -100px; pointer-events: none; }
+  .big { position: relative; font-size: clamp(3rem, 13vw, 8.5rem); font-weight: 900; line-height: 1.05; letter-spacing: -2px; }
+  .big span { display: block; -webkit-text-stroke: 2px var(--fire); color: transparent; }
+  .row { position: relative; display: grid; gap: 2rem; margin-top: 2rem; align-items: center; }
+  .row p { color: var(--muted); font-size: 1.1rem; max-width: 30rem; }
+  .cta { display: inline-flex; gap: .6rem; align-items: center; margin-top: 1.5rem; background: var(--fire); color: #fff; padding: 1rem 2rem; border-radius: 999px; font-weight: 800; text-decoration: none; box-shadow: 0 0 40px rgba(255,90,46,.5); }
+  .img { border-radius: 24px; overflow: hidden; border: 1px solid var(--line); transform: perspective(900px) rotateY(10deg); box-shadow: -30px 30px 60px rgba(0,0,0,.6); }
+  .marquee { border-block: 1px solid var(--line); overflow: hidden; white-space: nowrap; padding: 1rem 0; font-weight: 900; font-size: 1.4rem; color: var(--muted); }
+  .marquee div { display: inline-block; animation: slide 22s linear infinite; }
+  .marquee b { color: var(--fire); margin: 0 1.2rem; }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee div { animation: none; } }
+  section { padding-block: 4rem; }
+  h2 { font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 900; margin-bottom: 2rem; }
+  .bento { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  .b { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 1.6rem; min-height: 160px; display: flex; flex-direction: column; justify-content: flex-end; transition: border-color .2s; }
+  .b:hover { border-color: var(--fire); }
+  .b .k { font-size: 2.6rem; font-weight: 900; color: var(--fire); line-height: 1; }
+  .b h3 { font-weight: 800; margin-top: .5rem; }
+  .b p { color: var(--muted); font-size: .92rem; }
+  .b.hot { background: linear-gradient(135deg, var(--fire), #C9321A); border: 0; }
+  .b.hot .k, .b.hot p { color: #fff; }
+  footer { border-top: 1px solid var(--line); text-align: center; padding: 2rem; color: var(--muted); font-size: .9rem; }
+  @media (min-width: 760px) {
+    .row { grid-template-columns: 1fr 1fr; }
+    .bento { grid-template-columns: repeat(4, 1fr); }
+    .b.wide { grid-column: span 2; }
+  }
+</style>
+</head>
+<body>
+<header class="wrap nav"><div class="logo">چنته</div><a class="ghost" href="#">۰۲۱-۳۳۹۷۳۹۴۸</a></header>
+<main>
+  <section class="hero wrap">
+    <div class="glow" aria-hidden="true"></div>
+    <h1 class="big">گرفتگی؟<span>تمومه.</span></h1>
+    <div class="row">
+      <div>
+        <p>لوله بازکن چنته؛ قدرت شیمیایی برای فاضلاب، دستشویی، حمام و آشپزخانه. تولید کارخانه چنته پارس، ساخت ایران.</p>
+        <a class="cta" href="#">سفارش عمده ←</a>
+      </div>
+      <div class="img"><img src="../assets/img/box-front.webp" alt="جعبه لوله بازکن چنته"></div>
+    </div>
+  </section>
+  <div class="marquee" aria-hidden="true"><div>فاضلاب <b>●</b> دستشویی <b>●</b> حمام <b>●</b> آشپزخانه <b>●</b> ساخت ایران <b>●</b> فاضلاب <b>●</b> دستشویی <b>●</b> حمام <b>●</b> آشپزخانه <b>●</b> ساخت ایران <b>●</b></div></div>
+  <section class="wrap">
+    <h2>چرا چنته؟</h2>
+    <div class="bento">
+      <div class="b hot wide"><div class="k">۴ در ۱</div><h3>یک جعبه برای کل خانه</h3><p>فاضلاب، روشویی، کف‌شوی حمام و سینک آشپزخانه.</p></div>
+      <div class="b"><div class="k">IR</div><h3>ساخت ایران</h3><p>کارخانه در شهرک صنعتی چرم‌شهر</p></div>
+      <div class="b"><div class="k">✓</div><h3>ثبت‌شده</h3><p>شماره ثبت ۲۲۸۵۰۸</p></div>
+      <div class="b"><div class="k">عمده</div><h3>برای فروشگاه‌ها</h3><p>دفتر فروش ناصرخسرو تهران</p></div>
+      <div class="b wide"><div class="k">!</div><h3>ضدتقلب</h3><p>بسته‌بندی مشکوک دیدید؟ گزارش بدهید و مژدگانی بگیرید.</p></div>
+      <div class="b"><div class="k">⚠</div><h3>مصرف ایمن</h3><p>با دستکش، طبق دستور بسته</p></div>
+    </div>
+  </section>
+</main>
+<footer>شرکت تولید شیمیایی چنته پارس</footer>
+</body>
+</html>

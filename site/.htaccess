@@ -1,0 +1,34 @@
+# ---- Chanteh landing page: cPanel / Apache settings ----
+Options -Indexes
+DirectoryIndex index.html
+
+# Force HTTPS: enable ONLY after SSL (AutoSSL / Let's Encrypt) is active in cPanel
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+<IfModule mod_mime.c>
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml text/plain application/xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), camera=(), microphone=()"
+</IfModule>

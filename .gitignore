@@ -1,0 +1,4 @@
+*.zip
+site/data/*
+!site/data/.htaccess
+!site/data/config.sample.php

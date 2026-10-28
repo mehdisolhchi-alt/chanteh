@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>چنته | ایده ۲: تمیز و آبی</title>
+<style>
+  @font-face { font-family: "Vazirmatn"; src: url("../assets/fonts/Vazirmatn-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  :root { --blue: #0B6BCB; --aqua: #19B6D2; --red: #E4412A; --ink: #0F2233; --muted: #56697A; --bg: #F5FAFD; --line: #DCEAF3; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Vazirmatn", Tahoma, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.9; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 1rem; }
+  header { background: #fff; border-bottom: 1px solid var(--line); }
+  .nav { display: flex; justify-content: space-between; align-items: center; height: 70px; }
+  .logo { font-weight: 900; font-size: 1.6rem; color: var(--red); }
+  .logo span { color: var(--blue); font-weight: 400; font-size: .85rem; margin-right: .4rem; }
+  .pill { background: var(--blue); color: #fff; padding: .5rem 1.2rem; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: .9rem; }
+  .hero { background: linear-gradient(160deg, #fff 0%, #E4F4FB 100%); position: relative; overflow: hidden; }
+  .hero-in { display: grid; gap: 2rem; align-items: center; padding: 3.5rem 1rem 6rem; }
+  .tag { color: var(--blue); font-weight: 700; font-size: .9rem; letter-spacing: .5px; }
+  h1 { font-size: clamp(2rem, 6vw, 3.3rem); font-weight: 800; line-height: 1.35; margin: .6rem 0 1rem; }
+  h1 em { font-style: normal; background: linear-gradient(90deg, var(--blue), var(--aqua)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--muted); font-size: 1.08rem; }
+  .checks { list-style: none; display: flex; flex-wrap: wrap; gap: .6rem; margin: 1.5rem 0 2rem; }
+  .checks li { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: .35rem .8rem; font-size: .9rem; }
+  .checks li::before { content: "✓ "; color: var(--aqua); font-weight: 900; }
+  .cta { display: inline-block; background: var(--blue); color: #fff; padding: .9rem 1.8rem; border-radius: 14px; text-decoration: none; font-weight: 700; box-shadow: 0 12px 24px -10px rgba(11,107,203,.6); }
+  .visual { position: relative; }
+  .visual::before { content: ""; position: absolute; inset: 8% -4% -8% 8%; background: linear-gradient(135deg, var(--aqua), var(--blue)); border-radius: 32px; opacity: .18; }
+  .visual img { position: relative; border-radius: 22px; box-shadow: 0 24px 50px -20px rgba(15,34,51,.4); }
+  .wave { position: absolute; bottom: -1px; left: 0; width: 100%; height: 70px; }
+  section { padding-block: 4rem; }
+  h2 { font-size: 1.9rem; font-weight: 800; text-align: center; }
+  .sub { text-align: center; color: var(--muted); margin: .4rem 0 2.5rem; }
+  .flow { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .f { background: #fff; border-radius: 20px; padding: 1.6rem; border: 1px solid var(--line); }
+  .f .n { width: 44px; height: 44px; border-radius: 50%; background: #E4F4FB; color: var(--blue); display: grid; place-items: center; font-weight: 900; margin-bottom: .8rem; }
+  .f h3 { font-weight: 800; }
+  .f p { color: var(--muted); font-size: .95rem; }
+  .band { background: var(--ink); color: #fff; border-radius: 28px; padding: 2.5rem 1.5rem; display: grid; gap: 1rem; text-align: center; }
+  .band a { color: var(--aqua); font-size: 1.8rem; font-weight: 900; text-decoration: none; direction: ltr; }
+  footer { text-align: center; padding: 2rem; color: var(--muted); font-size: .9rem; }
+  @media (min-width: 900px) { .hero-in { grid-template-columns: 1.1fr .9fr; padding: 5rem 2rem 7rem; } }
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><div class="logo">چنته<span>| لوله‌ی باز، خانه‌ی تمیز</span></div><a class="pill" href="#">تماس</a></div></header>
+<main>
+  <section class="hero" style="padding:0">
+    <div class="wrap hero-in">
+      <div>
+        <div class="tag">محصول شرکت تولید شیمیایی چنته پارس</div>
+        <h1>آب دوباره <em>روان</em> می‌شود؛<br>با لوله بازکن چنته</h1>
+        <p class="lead">برای گرفتگی سینک آشپزخانه، روشویی، کف‌شوی حمام و لوله فاضلاب. ساده، سریع و در دسترس.</p>
+        <ul class="checks"><li>فاضلاب</li><li>دستشویی</li><li>حمام</li><li>آشپزخانه</li></ul>
+        <a class="cta" href="#">استعلام قیمت عمده</a>
+      </div>
+      <div class="visual"><img src="../assets/img/box-front.webp" alt="جعبه لوله بازکن چنته"></div>
+    </div>
+    <svg class="wave" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 40c240 40 480 40 720 10s480-40 720 0v20H0z" fill="#F5FAFD"/></svg>
+  </section>
+  <section class="wrap">
+    <h2>در سه قدم، بدون لوله‌کش</h2>
+    <p class="sub">همیشه دستور روی بسته را دقیق اجرا کنید.</p>
+    <div class="flow">
+      <div class="f"><div class="n">۱</div><h3>آماده شوید</h3><p>دستکش و عینک بزنید و محیط را تهویه کنید.</p></div>
+      <div class="f"><div class="n">۲</div><h3>طبق دستور بریزید</h3><p>مقدار گفته‌شده روی بسته را در دهانه‌ی لوله بریزید.</p></div>
+      <div class="f"><div class="n">۳</div><h3>صبر کنید و آب ببندید</h3><p>بعد از زمان گفته‌شده، با آب فراوان مسیر را بشویید.</p></div>
+    </div>
+  </section>
+  <section class="wrap">
+    <div class="band"><strong>خرید عمده و نمایندگی</strong><a href="tel:+982133973948">۰۲۱-۳۳۹۷۳۹۴۸</a><span>تهران، ناصرخسرو، پاساژ طوسی</span></div>
+  </section>
+</main>
+<footer>© چنته پارس · ساخت ایران</footer>
+</body>
+</html>
