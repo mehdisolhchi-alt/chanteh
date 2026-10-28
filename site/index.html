@@ -702,16 +702,21 @@
       el.mobile.value = normMobile(el.mobile.value);
       submit.disabled = true;
       fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
-        .then(function (r) { return r.json(); })
+        .then(function (r) { return r.json().catch(function () { throw new Error('server'); }); })
         .then(function (res) {
-          if (!res.ok) throw new Error(res.error || 'error');
+          if (!res.ok) throw new Error(res.error || 'server');
           msg.className = 'form-msg ok';
           msg.textContent = 'پیام شما ثبت شد. همکاران ما به‌زودی با شما تماس می‌گیرند.';
           form.reset();
         })
-        .catch(function () {
+        .catch(function (err) {
+          var reasons = {
+            invalid: 'اطلاعات فرم کامل یا درست نیست.',
+            rate_limited: 'تعداد ارسال‌ها زیاد بود؛ کمی بعد دوباره تلاش کنید.',
+            storage: 'ذخیره پیام روی سرور ممکن نشد.'
+          };
           msg.className = 'form-msg fail';
-          msg.textContent = 'ارسال انجام نشد. لطفاً دوباره تلاش کنید یا با ۰۲۱-۸۸۸۸۲۰۶۹ تماس بگیرید.';
+          msg.textContent = (reasons[err.message] || 'ارسال انجام نشد.') + ' می‌توانید با ۰۲۱-۸۸۸۸۲۰۶۹ تماس بگیرید. (کد: ' + err.message + ')';
         })
         .then(function () { submit.disabled = false; });
     });

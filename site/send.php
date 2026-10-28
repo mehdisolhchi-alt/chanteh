@@ -13,6 +13,39 @@ const DATA_DIR = __DIR__ . '/data'; // protected by data/.htaccess
 $config = is_file(DATA_DIR . '/config.php') ? (include DATA_DIR . '/config.php') : [];
 if (!is_array($config)) $config = [];
 
+// Hosts without mbstring: fall back to iconv (always present in cPanel PHP builds)
+if (!function_exists('mb_substr')) {
+    function mb_substr($s, $start, $len) { return iconv_substr($s, $start, $len, 'UTF-8'); }
+    function mb_strlen($s) { return iconv_strlen($s, 'UTF-8'); }
+}
+
+// Any PHP fatal error still answers the form with JSON (and is logged), instead of a blank 500
+register_shutdown_function(function () {
+    $e = error_get_last();
+    if (!$e || !in_array($e['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) return;
+    @file_put_contents(DATA_DIR . '/php-errors.log', date('Y-m-d H:i') . " {$e['message']} line {$e['line']}\n", FILE_APPEND);
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json; charset=utf-8');
+    }
+    echo json_encode(['ok' => false, 'error' => 'server']);
+});
+
+// Self-check: open send.php?check=1 in a browser. Shows only yes/no, never secrets.
+if (isset($_GET['check'])) {
+    header('Content-Type: application/json; charset=utf-8');
+    $mode = !empty($config['relay_url']) && !empty($config['relay_key']) ? 'relay'
+          : (!empty($config['telegram_token']) && !empty($config['telegram_chat_id']) ? 'direct' : 'none');
+    echo json_encode([
+        'php'             => PHP_VERSION,
+        'data_dir_ok'     => is_dir(DATA_DIR) && is_writable(DATA_DIR),
+        'curl'            => function_exists('curl_init'),
+        'config_php'      => is_file(DATA_DIR . '/config.php'),
+        'telegram_mode'   => $mode,
+    ], JSON_PRETTY_PRINT);
+    exit;
+}
+
 date_default_timezone_set('Asia/Tehran');
 
 const BUSINESS = [
@@ -53,9 +86,9 @@ function normalize_mobile(string $s): string
         '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9',
     ]);
     $s = preg_replace('/[\s\-()]/', '', $s);
-    if (str_starts_with($s, '+98')) $s = '0' . substr($s, 3);
-    elseif (str_starts_with($s, '0098')) $s = '0' . substr($s, 4);
-    elseif (str_starts_with($s, '98') && strlen($s) === 12) $s = '0' . substr($s, 2);
+    if (strncmp($s, '+98', 3) === 0) $s = '0' . substr($s, 3);
+    elseif (strncmp($s, '0098', 4) === 0) $s = '0' . substr($s, 4);
+    elseif (strncmp($s, '98', 2) === 0 && strlen($s) === 12) $s = '0' . substr($s, 2);
     return $s;
 }
 
@@ -96,7 +129,7 @@ if ($fh && flock($fh, LOCK_EX)) {
     $data = json_decode(stream_get_contents($fh) ?: '{}', true) ?: [];
     $now = time();
     foreach ($data as $k => $times) {
-        $data[$k] = array_values(array_filter($times, fn($t) => $t > $now - 3600));
+        $data[$k] = array_values(array_filter($times, function ($t) use ($now) { return $t > $now - 3600; }));
         if (!$data[$k]) unset($data[$k]);
     }
     $key = hash('sha256', $ip);
@@ -146,7 +179,7 @@ if (NOTIFY_EMAIL !== '') {
 // Telegram notification, two modes (see data/config.sample.php):
 //  - relay: our Cloudflare Worker holds the bot token and chat id (relay_url + relay_key)
 //  - direct: call the Bot API ourselves (telegram_token + telegram_chat_id [+ api_base])
-$h = fn(string $v): string => htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); // relay uses parse_mode HTML
+$h = function ($v) { return htmlspecialchars($v, ENT_QUOTES, 'UTF-8'); }; // relay uses parse_mode HTML
 $text = "📩 <b>پیام جدید از سایت چنته</b>\n\n"
       . "👤 نام: " . $h($name) . "\n"
       . "🏷 نوع مخاطب: " . BUSINESS[$business] . "\n"
